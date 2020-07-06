@@ -1,0 +1,52 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "MeshInstance",
+"class": "ColobotMeshInstance",
+"language": "GDScript",
+"path": "res://Converter/ColobotMeshInstance.gd"
+}, {
+"base": "Reference",
+"class": "ColobotModel",
+"language": "GDScript",
+"path": "res://Formats/ColobotModel.gd"
+}, {
+"base": "Reference",
+"class": "GLTFFormat",
+"language": "GDScript",
+"path": "res://Formats/GLTFFormat.gd"
+}, {
+"base": "Reference",
+"class": "MODFormat",
+"language": "GDScript",
+"path": "res://Formats/MODFormat.gd"
+} ]
+_global_script_class_icons={
+"ColobotMeshInstance": "",
+"ColobotModel": "",
+"GLTFFormat": "",
+"MODFormat": ""
+}
+
+[application]
+
+config/name="Colobot Model Converter"
+run/main_scene="res://Converter/Converter.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+Config="*res://Converter/Config.tscn"
+TextureLoader="*res://Converter/TextureLoader.gd"
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
