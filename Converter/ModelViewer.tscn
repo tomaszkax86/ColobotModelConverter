@@ -80,6 +80,8 @@ func load_model(path):
 		_model.load_mod(path)
 	elif path.ends_with(\".gltf\"):
 		_model.load_gltf(path)
+	elif path.ends_with(\".txt\"):
+		_model.load_txt(path)
 	else:
 		return
 	
@@ -101,6 +103,8 @@ func save_model(path):
 		_model.save_mod(path)
 	elif path.ends_with(\".gltf\"):
 		_model.save_gltf(path)
+	elif path.ends_with(\".txt\"):
+		_model.save_txt(path)
 
 func close_model():
 	_model.mesh = null
@@ -233,3 +237,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10 )
 current = true
 fov = 90.0
 far = 2000.0
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 20, 20, 20 )

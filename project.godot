@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://Formats/ColobotModel.gd"
 }, {
 "base": "Reference",
+"class": "Formats",
+"language": "GDScript",
+"path": "res://Formats/Formats.gd"
+}, {
+"base": "Reference",
 "class": "GLTFFormat",
 "language": "GDScript",
 "path": "res://Formats/GLTFFormat.gd"
@@ -28,12 +33,19 @@ _global_script_classes=[ {
 "class": "MODFormat",
 "language": "GDScript",
 "path": "res://Formats/MODFormat.gd"
+}, {
+"base": "Reference",
+"class": "TXTFormat",
+"language": "GDScript",
+"path": "res://Formats/TXTFormat.gd"
 } ]
 _global_script_class_icons={
 "ColobotMeshInstance": "",
 "ColobotModel": "",
+"Formats": "",
 "GLTFFormat": "",
-"MODFormat": ""
+"MODFormat": "",
+"TXTFormat": ""
 }
 
 [application]

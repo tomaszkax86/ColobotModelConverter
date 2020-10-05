@@ -26,6 +26,7 @@ margin_right = 35.0
 margin_bottom = 32.0
 text = "File"
 items = [ "Load", null, 0, false, false, 0, 0, null, "", false, "Save", null, 0, false, false, 1, 0, null, "", false, "Close", null, 0, false, false, 2, 0, null, "", false, "Config", null, 0, false, false, 3, 0, null, "", false, "Exit", null, 0, false, false, 4, 0, null, "", false ]
+switch_on_hover = true
 
 [node name="ViewMenuButton" type="MenuButton" parent="MenuBar/HBoxContainer"]
 margin_left = 39.0
@@ -33,6 +34,15 @@ margin_right = 81.0
 margin_bottom = 32.0
 text = "View"
 items = [ "Grid", null, 1, true, false, 0, 0, null, "", false, "Axes", null, 1, false, false, 1, 0, null, "", false, "Grass", null, 1, false, false, 2, 0, null, "", false, "", null, 0, false, false, 3, 0, null, "", true, "Materials", null, 1, false, false, 4, 0, null, "", false, "UV Options", null, 1, false, false, 5, 0, null, "", false, "Model", null, 1, true, false, 6, 0, null, "", false, "Wireframe", null, 1, false, false, 7, 0, null, "", false, "Normals", null, 1, false, false, 8, 0, null, "", false ]
+switch_on_hover = true
+
+[node name="ConvertMenuButton" type="MenuButton" parent="MenuBar/HBoxContainer"]
+margin_left = 85.0
+margin_right = 146.0
+margin_bottom = 32.0
+text = "Convert"
+items = [ "Batch conversion", null, 0, false, false, 0, 0, null, "", false ]
+switch_on_hover = true
 
 [node name="OptionsPanel" type="Panel" parent="."]
 visible = false
@@ -123,9 +133,9 @@ margin_bottom = 448.0
 window_title = "Zapisz plik"
 resizable = true
 access = 2
-filters = PoolStringArray( "*.mod", "*.gltf" )
-current_dir = "E:/Projects/Colobot Model Converter"
-current_path = "E:/Projects/Colobot Model Converter/"
+filters = PoolStringArray( "*.mod", "*.gltf", "*.txt" )
+current_dir = "/Projects/ColobotModelConverter"
+current_path = "/Projects/ColobotModelConverter/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -196,8 +206,121 @@ margin_bottom = 405.0
 window_title = "Otwórz katalog"
 mode = 2
 access = 2
-current_dir = "E:/Projects/Colobot Model Converter"
-current_path = "E:/Projects/Colobot Model Converter/"
+current_dir = "/Projects/ColobotModelConverter"
+current_path = "/Projects/ColobotModelConverter/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ConvertDialog" type="WindowDialog" parent="."]
+margin_left = 70.0
+margin_top = 97.0
+margin_right = 828.0
+margin_bottom = 496.0
+window_title = "Batch conversion"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ConvertDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = -16.0
+margin_bottom = -16.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ConvertDialog/VBoxContainer"]
+margin_right = 726.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+
+[node name="SelectInputButton" type="Button" parent="ConvertDialog/VBoxContainer/HBoxContainer"]
+margin_right = 119.0
+margin_bottom = 32.0
+text = "Select input files"
+
+[node name="SelectOutputButton" type="Button" parent="ConvertDialog/VBoxContainer/HBoxContainer"]
+margin_left = 123.0
+margin_right = 281.0
+margin_bottom = 32.0
+text = "Select output directory"
+
+[node name="OutputDirectoryTextEdit" type="TextEdit" parent="ConvertDialog/VBoxContainer/HBoxContainer"]
+margin_left = 285.0
+margin_right = 658.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+readonly = true
+
+[node name="FormatOptionButton" type="OptionButton" parent="ConvertDialog/VBoxContainer/HBoxContainer"]
+margin_left = 662.0
+margin_right = 726.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 0 )
+
+[node name="ItemList" type="ItemList" parent="ConvertDialog/VBoxContainer"]
+margin_top = 36.0
+margin_right = 726.0
+margin_bottom = 331.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ConvertDialog/VBoxContainer"]
+margin_top = 335.0
+margin_right = 726.0
+margin_bottom = 367.0
+rect_min_size = Vector2( 0, 32 )
+alignment = 2
+
+[node name="ConvertionProgressBar" type="ProgressBar" parent="ConvertDialog/VBoxContainer/HBoxContainer2"]
+visible = false
+margin_top = 9.0
+margin_right = 589.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="ClearListButton" type="Button" parent="ConvertDialog/VBoxContainer/HBoxContainer2"]
+margin_left = 593.0
+margin_right = 661.0
+margin_bottom = 32.0
+text = "Clear list"
+
+[node name="ConvertButton" type="Button" parent="ConvertDialog/VBoxContainer/HBoxContainer2"]
+margin_left = 665.0
+margin_right = 726.0
+margin_bottom = 32.0
+text = "Convert"
+
+[node name="InputFileDialog" type="FileDialog" parent="ConvertDialog"]
+margin_left = 39.0
+margin_top = 21.0
+margin_right = 654.0
+margin_bottom = 310.0
+window_title = "Otwórz plik(i)"
+mode = 1
+access = 2
+filters = PoolStringArray( "*.gltf", "*.mod", "*.txt" )
+current_dir = "/Projects/ColobotModelConverter"
+current_path = "/Projects/ColobotModelConverter/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OutputFileDialog" type="FileDialog" parent="ConvertDialog"]
+margin_left = 41.0
+margin_top = 17.0
+margin_right = 657.0
+margin_bottom = 312.0
+window_title = "Otwórz katalog"
+mode = 2
+access = 2
+current_dir = "/Projects/ColobotModelConverter"
+current_path = "/Projects/ColobotModelConverter/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -207,3 +330,9 @@ __meta__ = {
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="ConfigDialog/GridContainer/HBoxContainer/DirectoryButton" to="." method="_on_DirectoryButton_pressed"]
 [connection signal="pressed" from="ConfigDialog/SaveConfigButton" to="." method="_on_SaveConfigButton_pressed"]
+[connection signal="pressed" from="ConvertDialog/VBoxContainer/HBoxContainer/SelectInputButton" to="." method="_on_SelectInputButton_pressed"]
+[connection signal="pressed" from="ConvertDialog/VBoxContainer/HBoxContainer/SelectOutputButton" to="." method="_on_SelectOutputButton_pressed"]
+[connection signal="pressed" from="ConvertDialog/VBoxContainer/HBoxContainer2/ClearListButton" to="." method="_on_ClearListButton_pressed"]
+[connection signal="pressed" from="ConvertDialog/VBoxContainer/HBoxContainer2/ConvertButton" to="." method="_on_ConvertButton_pressed"]
+[connection signal="files_selected" from="ConvertDialog/InputFileDialog" to="." method="_on_InputFileDialog_files_selected"]
+[connection signal="dir_selected" from="ConvertDialog/OutputFileDialog" to="." method="_on_OutputFileDialog_dir_selected"]

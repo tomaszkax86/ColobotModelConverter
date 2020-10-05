@@ -9,12 +9,33 @@ onready var _config_dialog = $ConfigDialog
 onready var _options_panel = $OptionsPanel
 onready var _texture_directory = $ConfigDialog/GridContainer/HBoxContainer/TextureDirectoryEdit
 
+onready var _convert_dialog = $ConvertDialog
+onready var _input_files = $ConvertDialog/VBoxContainer/ItemList
+onready var _output_directory = $ConvertDialog/VBoxContainer/HBoxContainer/OutputDirectoryTextEdit
+onready var _input_dialog = $ConvertDialog/InputFileDialog
+onready var _output_dialog = $ConvertDialog/OutputFileDialog
+onready var _format_option = $ConvertDialog/VBoxContainer/HBoxContainer/FormatOptionButton
+onready var _convertion_progress = $ConvertDialog/VBoxContainer/HBoxContainer2/ConvertionProgressBar
+
+var _thread = null
+
 func _ready():
 	var popup = $MenuBar/HBoxContainer/FileMenuButton.get_popup()
 	popup.connect("id_pressed", self, "_on_file_item_pressed")
-	
+
 	popup = $MenuBar/HBoxContainer/ViewMenuButton.get_popup()
 	popup.connect("id_pressed", self, "_on_view_item_pressed")
+
+	popup = $MenuBar/HBoxContainer/ConvertMenuButton.get_popup()
+	popup.connect("id_pressed", self, "_on_convert_item_pressed")
+
+	_format_option.add_item(".mod")
+	_format_option.add_item(".txt")
+	_format_option.add_item(".gltf")
+
+func _exit_tree():
+	if _thread != null:
+		_thread.wait_to_finish()
 
 func _on_FileDialog_file_selected(path):
 	if _file_dialog.mode == FileDialog.MODE_OPEN_FILE:
@@ -78,6 +99,10 @@ func _on_view_item_pressed(id):
 		_view_menu.get_popup().set_item_checked(id, status)
 		get_tree().call_group("viewer", "set_normals_visible", status)
 
+func _on_convert_item_pressed(id):
+	if id == 0:
+		_convert_dialog.show()
+
 func _on_EnergySlider_value_changed(value):
 	get_tree().call_group("viewer", "set_energy_level", value)
 
@@ -89,40 +114,40 @@ func _on_Tracker2Slider_value_changed(value):
 
 func set_materials(materials):
 	_material_tree.clear()
-	
+
 	var root = _material_tree.create_item()
 	_material_tree.set_hide_root(true)
-	
+
 	var index = 1
 
 	for material in materials:
 		var material_node = _material_tree.create_item(root)
 		material_node.set_text(0, "Material " + str(index))
 		material_node.collapsed = true
-		
+
 		if material.texture != "":
 			material_node.set_text(0, "Material " + str(index) + " (" + material.texture + ")")
 			var texture_node = _material_tree.create_item(material_node)
 			texture_node.set_text(0, "Texture: " + material.texture)
-		
+
 		var diffuse_node = _material_tree.create_item(material_node)
 		diffuse_node.set_text(0, "Diffuse: " + str(material.diffuse))
-		
+
 		var specular_node = _material_tree.create_item(material_node)
 		specular_node.set_text(0, "Specular: " + str(material.specular))
-		
+
 		var ambient_node = _material_tree.create_item(material_node)
 		ambient_node.set_text(0, "Ambient: " + str(material.ambient))
-		
+
 		var lod_node = _material_tree.create_item(material_node)
 		lod_node.set_text(0, "LOD range: " + str(material.lod_min) + " - " + str(material.lod_max))
-		
+
 		var dirt_node = _material_tree.create_item(material_node)
 		dirt_node.set_text(0, "Dirt: " + str(material.dirt))
-		
+
 		var state_node = _material_tree.create_item(material_node)
 		state_node.set_text(0, "States")
-		
+
 		if material.state == 0:
 			var node = _material_tree.create_item(state_node)
 			node.set_text(0, "normal")
@@ -148,5 +173,61 @@ func set_materials(materials):
 			if material.state & ColobotModel.PART_3:
 				var node = _material_tree.create_item(state_node)
 				node.set_text(0, "energy")
-		
+
 		index = index + 1
+
+func _on_InputFileDialog_files_selected(paths):
+	for path in paths:
+		_input_files.add_item(path)
+
+func _on_OutputFileDialog_dir_selected(dir):
+	_output_directory.text = dir
+
+func _on_SelectInputButton_pressed():
+	_input_dialog.show()
+
+func _on_SelectOutputButton_pressed():
+	_output_dialog.show()
+
+func _on_ClearListButton_pressed():
+	_input_files.clear()
+
+func _on_ConvertButton_pressed():
+	if _thread != null:
+		_thread.wait_to_finish()
+
+	_thread = Thread.new()
+	_thread.start(self, "_process_files")
+
+func _process_files(_nul):
+	var count = _input_files.get_item_count()
+
+	var directory = _output_directory.text
+
+	_convertion_progress.visible = true
+	_convertion_progress.max_value = count
+	_convertion_progress.value = 0
+
+	$ConvertDialog/VBoxContainer/HBoxContainer2/ConvertButton.disabled = true
+
+	for i in range(count):
+		var input_file = _input_files.get_item_text(i)
+
+		var ind = input_file.find_last("/") + 1
+		var ext = input_file.find_last(".")
+
+		var filename = input_file.substr(ind, ext - ind)
+
+		var output_file = directory + "/" + filename + _format_option.text
+
+		var model = Formats.read_model(input_file)
+
+		Formats.write_model(output_file, model)
+
+		_convertion_progress.value = _convertion_progress.value + 1
+
+		print(output_file)
+
+	_convertion_progress.visible = false
+
+	$ConvertDialog/VBoxContainer/HBoxContainer2/ConvertButton.disabled = false

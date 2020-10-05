@@ -36,6 +36,14 @@ func load_gltf(path : String):
 func save_gltf(path : String):
 	GLTFFormat.write(path, colobot_model)
 
+func load_txt(path : String):
+	colobot_model = TXTFormat.read(path)
+
+	mesh = to_mesh()
+
+func save_txt(path : String):
+	TXTFormat.write(path, colobot_model)
+
 func _fmod(x, y):
 	return x - floor(x / y)
 
