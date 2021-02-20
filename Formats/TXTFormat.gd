@@ -171,19 +171,19 @@ static func _write_txt_vertex(output : File, vertex : ColobotModel.Vertex, index
 	elements.append("c")
 	elements.append(String(vertex.position.x))
 	elements.append(String(vertex.position.y))
-	elements.append(String(vertex.position.z))
+	elements.append(String(-vertex.position.z))
 
 	elements.append("n")
 	elements.append(String(vertex.normal.x))
 	elements.append(String(vertex.normal.y))
-	elements.append(String(vertex.normal.z))
+	elements.append(String(-vertex.normal.z))
 
 	elements.append("t1")
-	elements.append(String(vertex.uv2.x))
-	elements.append(String(vertex.uv2.y))
-
-	elements.append("t2")
 	elements.append(String(vertex.uv1.x))
 	elements.append(String(vertex.uv1.y))
+
+	elements.append("t2")
+	elements.append(String(vertex.uv2.x))
+	elements.append(String(vertex.uv2.y))
 
 	output.store_line(elements.join(" "))
